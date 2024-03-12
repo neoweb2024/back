@@ -4,7 +4,7 @@ const dayjs = require("dayjs");
 const { AppointmentModel } = require("../models/appointment/appointmentModel");
 const { Preference, MercadoPagoConfig, Payment, } = require("mercadopago");
 
-const TOKEN = "APP_USR-8148992040092161-022214-2a8ab72bd9b996b6dbb201048a34f61c-168165628"
+const TOKEN = process?.env?.MPTOKEN ?? ""
 
 // Agrega credenciales
 const client = new MercadoPagoConfig({
