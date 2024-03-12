@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
-const mongoDB = "mongodb+srv://proyectoneoadmin:proyectoneoadmin@proyectoneo.ylxx53q.mongodb.net/";
+const mongoDB = "mongodb+srv://neoweb2024:neodb2024@neodb.xmcktbc.mongodb.net/t/";
 
 const corsOptions = {
   origin: '*', // replace with your frontend URL
