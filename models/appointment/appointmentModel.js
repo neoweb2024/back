@@ -23,7 +23,8 @@ const AppointmentSchema = new Schema({
     contactEmail: String,
     date: String,
     hour: String,
-    canceled: Boolean
+    canceled: Boolean,
+    preferenceId: String
 });
 
 const AppointmentModel = mongoose.model("AppointmentSchema", AppointmentSchema);

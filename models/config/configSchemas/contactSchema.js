@@ -8,7 +8,9 @@ const ContactSchema = new Schema({
     email: String,
     city: String,
     state: String,
-    mapPoint: String
+    mapPoint: String,
+    facebook: String,
+    instagram: String
 });
 
 module.exports = ContactSchema;

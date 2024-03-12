@@ -68,9 +68,11 @@ router.get('/:date', async function (req, res, next) {
         if (!availability) {
             res.send("No availability")
         } else {
+            const realDay = day.toString().padStart(2, '0');
             const realMonth = `${month + 1}`.length > 1 ? `${month + 1}` : `0${month + 1}`
             const appointmentInThisDay = await AppointmentModel.find({
-                date: `${day}/${realMonth}/${year}`
+                date: `${realDay}/${realMonth}/${year}`,
+                canceled: { $in: [false, undefined] }
             });
             let unavailableSchedules = appointmentInThisDay.map((ap) => ap.hour)
             res.send({ date: `${day}/${realMonth}/${year}`, unavailableSchedules, allSchedules: availability[dayOfWeek] })

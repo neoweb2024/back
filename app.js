@@ -12,7 +12,7 @@ mongoose.set("strictQuery", false);
 const mongoDB = "mongodb+srv://proyectoneoadmin:proyectoneoadmin@proyectoneo.ylxx53q.mongodb.net/";
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // replace with your frontend URL
+  origin: '*', // replace with your frontend URL
   optionsSuccessStatus: 200,
 };
 
@@ -23,6 +23,7 @@ var imagesRouter = require('./routes/images');
 var appointmentRouter = require('./routes/appointment');
 var availabilityRouter = require('./routes/availability');
 var mercadoPagoRouter = require('./routes/mp');
+var usersRouter = require('./routes/users');
 
 var app = express();
 
@@ -43,6 +44,7 @@ app.use('/images', imagesRouter);
 app.use('/appointment', appointmentRouter);
 app.use('/availability', availabilityRouter);
 app.use('/mercadopago', mercadoPagoRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
