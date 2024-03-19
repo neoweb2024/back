@@ -53,19 +53,15 @@ router.post("/crear-preferencia", async (req, res) => {
 });
 
 router.post("/webhook", async (req, res) => {
-  const protocol = req.protocol;
-  const backendUrl = req.get('host');
-
   let paymentQ = req.query;
   try {
-
     if (paymentQ.type === "payment") {
       const result = await payment.get({
         id: paymentQ["data.id"],
       });
-
+      const appointmentPaid = result.external_reference
+      console.log(appointmentPaid);
       if (result.status === "approved") {
-        const appointmentPaid = result.external_reference
         await fetch(`https://back-delta-seven.vercel.app/appointment/create`, {
           method: 'POST',
           headers: {
