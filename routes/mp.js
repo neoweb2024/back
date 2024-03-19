@@ -34,7 +34,7 @@ router.post("/crear-preferencia", async (req, res) => {
         failure: failureUrl,
       },
       auto_return: "approved",
-      additional_info: JSON.stringify(req.body.appointment),
+      metadata: req.body.appointment,
       notification_url: `https://back-delta-seven.vercel.app/mercadopago/webhook`
     };
 
