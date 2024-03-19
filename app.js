@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 
-const mongoDB = process.env.DBURL || "mongodb+srv://neoweb2024:neodb2024@neodb.xmcktbc.mongodb.net/neodb/";
+const mongoDB = process.env.DBURL;
 
 const corsOptions = {
   origin: '*', // replace with your frontend URL
