@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const dayjs = require("dayjs");
-const { AppointmentModel } = require("../models/appointment/appointmentModel");
 const { Preference, MercadoPagoConfig, Payment, } = require("mercadopago");
 
 const TOKEN = process?.env?.MPTOKEN ?? ""
@@ -59,9 +57,8 @@ router.post("/webhook", async (req, res) => {
       const result = await payment.get({
         id: paymentQ["data.id"],
       });
-      console.log(result);
       if (result.status === "approved") {
-        const appointmentPaid = result.external_reference
+        const appointmentPaid = result.metadata
         await fetch(`https://back-delta-seven.vercel.app/appointment/create`, {
           method: 'POST',
           headers: {
