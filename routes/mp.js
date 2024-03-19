@@ -16,12 +16,9 @@ const payment = new Payment(client);
 // POST
 router.post("/crear-preferencia", async (req, res) => {
   try {
-    const frontUrl = req.headers.host;
-    const protocol = req.protocol;
-    const backendUrl = req.get('host');
 
-    const successUrl = `${protocol}://${frontUrl}/reserva-exitosa`;
-    const failureUrl = `${protocol}://${frontUrl}/reserva-error`;
+    const successUrl = `https://front-sable-one.vercel.app/reserva-exitosa`;
+    const failureUrl = `https://front-sable-one.vercel.app/reserva-error`;
 
     const body = {
       items: [
@@ -38,7 +35,7 @@ router.post("/crear-preferencia", async (req, res) => {
       },
       auto_return: "approved",
       external_reference: req.body.appointment,
-      notification_url: `${protocol}://${backendUrl}/mercadopago/webhook`
+      notification_url: `https://back-delta-seven.vercel.app/mercadopago/webhook`
     };
 
     const preference = new Preference(client);
@@ -69,7 +66,7 @@ router.post("/webhook", async (req, res) => {
 
       if (result.status === "approved") {
         const appointmentPaid = result.external_reference
-        await fetch(`${protocol}://${backendUrl}/appointment/create`, {
+        await fetch(`https://back-delta-seven.vercel.app/appointment/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
