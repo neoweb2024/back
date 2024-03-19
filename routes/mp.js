@@ -16,10 +16,12 @@ const payment = new Payment(client);
 // POST
 router.post("/crear-preferencia", async (req, res) => {
   try {
+    const frontUrl = req.headers.host;
+    const protocol = req.protocol;
+    const backendUrl = req.get('host');
 
-    const appo = {
-      nombre : "nicoa" //meter datos del turno
-    }
+    const successUrl = `${protocol}://${frontUrl}/reserva-exitosa`;
+    const failureUrl = `${protocol}://${frontUrl}/reserva-error`;
 
     const body = {
       items: [
@@ -31,12 +33,12 @@ router.post("/crear-preferencia", async (req, res) => {
         },
       ],
       back_urls: {
-        success: "https://proyecto-neo.vercel.app/reserva-exitosa", 
-        failure: "https://proyecto-neo.vercel.app/reserva-error",
+        success: successUrl,
+        failure: failureUrl,
       },
       auto_return: "approved",
-      external_reference: appo,
-      notification_url: "https://proyecto-neo-back-production.up.railway.app/mercadopago/webhook"
+      external_reference: req.body.appointment,
+      notification_url: `${protocol}://${backendUrl}/mercadopago/webhook`
     };
 
     const preference = new Preference(client);
@@ -54,6 +56,8 @@ router.post("/crear-preferencia", async (req, res) => {
 });
 
 router.post("/webhook", async (req, res) => {
+  const protocol = req.protocol;
+  const backendUrl = req.get('host');
 
   let paymentQ = req.query;
   try {
@@ -62,11 +66,16 @@ router.post("/webhook", async (req, res) => {
       const result = await payment.get({
         id: paymentQ["data.id"],
       });
-      // console.log(result.external_reference, "soy el turno");
 
       if (result.status === "approved") {
-        const appointmentPaid = result.external_reference //turno pagado
-        //CREAR TURNO
+        const appointmentPaid = result.external_reference
+        await fetch(`${protocol}://${backendUrl}/appointment/create`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(appointmentPaid),
+        });
       }
       return res.status(200);
     }
