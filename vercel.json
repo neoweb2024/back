@@ -6,30 +6,5 @@
             "use": "@vercel/node"
         }
     ],
-    "rewrites": [
-        {
-            "source": "/images",
-            "destination": "./routes/images"
-        },
-        {
-            "source": "/appointment",
-            "destination": "./routes/appointment"
-        },
-        {
-            "source": "/availability",
-            "destination": "./routes/availability"
-        },
-        {
-            "source": "/mercadopago",
-            "destination": "./routes/mp"
-        },
-        {
-            "source": "/users",
-            "destination": "./routes/users"
-        },
-        {
-            "source": "/",
-            "destination": "./routes/index"
-        }
-    ]
+    "cleanUrls": true
 }
