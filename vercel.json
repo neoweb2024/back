@@ -8,8 +8,28 @@
     ],
     "routes": [
         {
+            "src": "/images(.*)",
+            "dest": "./routes/images$1"
+        },
+        {
+            "src": "/appointment(.*)",
+            "dest": "./routes/appointment$1"
+        },
+        {
+            "src": "/availability(.*)",
+            "dest": "./routes/availability$1"
+        },
+        {
+            "src": "/mercadopago(.*)",
+            "dest": "./routes/mp$1"
+        },
+        {
+            "src": "/users(.*)",
+            "dest": "./routes/users$1"
+        },
+        {
             "src": "/(.*)",
-            "dest": "/"
+            "dest": "./routes/index$1"
         }
     ]
 }
