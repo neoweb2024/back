@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { Preference, MercadoPagoConfig, Payment, } = require("mercadopago");
+import { AppointmentModel } from "../models/appointment/appointmentModel";
+import dayjs from "dayjs";
 
 const TOKEN = process?.env?.MPTOKEN ?? ""
 
@@ -58,14 +60,30 @@ router.post("/webhook", async (req, res) => {
         id: paymentQ["data.id"],
       });
       if (result.status === "approved") {
-        const appointmentPaid = result.metadata
-        await fetch(`https://back-delta-seven.vercel.app/appointment/create`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(appointmentPaid),
-        })
+        const { date, hour } = result.metadata
+
+        const lastMonth = dayjs().subtract(1, 'month').format('MM/YYYY');
+
+        await AppointmentModel.deleteMany({
+          date: {
+            $regex: `^\\d{2}/.*${lastMonth}`
+          }
+        });
+
+        const existingAppointment = await AppointmentModel.findOne({
+          date: date,
+          hour: hour,
+          canceled: false,
+        });
+
+        if (existingAppointment) {
+          return res.send(existingAppointment);
+        }
+
+        const newDoc = new AppointmentModel(result.metadata);
+        await newDoc.save();
+
+        res.send(newDoc);
       }
       return res.status(200);
     }
