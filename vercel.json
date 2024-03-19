@@ -6,30 +6,30 @@
             "use": "@vercel/node"
         }
     ],
-    "routes": [
+    "rewrites": [
         {
-            "src": "/images(.*)",
-            "dest": "./routes/images$1"
+            "source": "/images",
+            "destination": "./routes/images"
         },
         {
-            "src": "/appointment(.*)",
-            "dest": "./routes/appointment$1"
+            "source": "/appointment",
+            "destination": "./routes/appointment"
         },
         {
-            "src": "/availability(.*)",
-            "dest": "./routes/availability$1"
+            "source": "/availability",
+            "destination": "./routes/availability"
         },
         {
-            "src": "/mercadopago(.*)",
-            "dest": "./routes/mp$1"
+            "source": "/mercadopago",
+            "destination": "./routes/mp"
         },
         {
-            "src": "/users(.*)",
-            "dest": "./routes/users$1"
+            "source": "/users",
+            "destination": "./routes/users"
         },
         {
-            "src": "/(.*)",
-            "dest": "./routes/index$1"
+            "source": "/",
+            "destination": "./routes/index"
         }
     ]
 }
