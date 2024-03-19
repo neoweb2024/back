@@ -35,7 +35,7 @@ router.post("/crear-preferencia", async (req, res) => {
       },
       auto_return: "approved",
       external_reference: req.body.appointment,
-      notification_url: `http://localhost:3001/mercadopago/webhook`
+      notification_url: `https://back-delta-seven.vercel.app/mercadopago/webhook`
     };
 
     const preference = new Preference(client);
@@ -59,7 +59,6 @@ router.post("/webhook", async (req, res) => {
       const result = await payment.get({
         id: paymentQ["data.id"],
       });
-      console.log(result);
       if (result.status === "approved") {
         const appointmentPaid = result.external_reference
         await fetch(`https://back-delta-seven.vercel.app/appointment/create`, {
