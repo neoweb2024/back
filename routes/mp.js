@@ -33,6 +33,18 @@ function transformarObjeto(objeto) {
   return nuevoObjeto;
 }
 
+function formatDate(date) {
+  var year = date.getFullYear();
+  var month = (date.getMonth() + 1).toString().padStart(2, '0');
+  var day = date.getDate().toString().padStart(2, '0');
+  var hours = date.getHours().toString().padStart(2, '0');
+  var minutes = date.getMinutes().toString().padStart(2, '0');
+  var seconds = date.getSeconds().toString().padStart(2, '0');
+  var timeZoneOffset = -date.getTimezoneOffset() / 60;
+  var timeZoneOffsetString = (timeZoneOffset >= 0 ? '+' : '-') + Math.abs(timeZoneOffset).toString().padStart(2, '0') + ':00';
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${timeZoneOffsetString}`;
+}
+
 
 // POST
 router.post("/crear-preferencia", async (req, res) => {
@@ -57,7 +69,8 @@ router.post("/crear-preferencia", async (req, res) => {
       auto_return: "approved",
       metadata: req.body.appointment,
       notification_url: `https://back-delta-seven.vercel.app/mercadopago/webhook`,
-      expires: true
+      expiration_date_from: formatDate(new Date()),
+      expiration_date_to: formatDate(new Date(new Date().getTime() + 5 * 60000))
     };
 
     const isQueded = await QuededModel.findOne({
