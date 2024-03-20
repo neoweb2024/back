@@ -78,13 +78,14 @@ router.post("/webhook", async (req, res) => {
       const result = await payment.get({
         id: paymentQ["data.id"],
       });
+      console.log(JSON.stringify(transformarObjeto(result.metadata)));
       if (result.status === "approved") {
         await fetch("https://back-delta-seven.vercel.app/appointment/create", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: transformarObjeto(result.metadata)
+          body: JSON.stringify(transformarObjeto(result.metadata))
         })
       }
       return res.status(200);
