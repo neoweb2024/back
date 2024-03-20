@@ -16,7 +16,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-mongoose.connect(mongoDB).catch((err) => console.log(err));
+mongoose.connect(mongoDB).catch((err) => console.error(err));
 
 var indexRouter = require('./routes/index');
 var imagesRouter = require('./routes/images');

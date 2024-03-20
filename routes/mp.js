@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Preference, MercadoPagoConfig, Payment, } = require("mercadopago");
+import { AppointmentModel } from "../models/appointment/appointmentModel";
 
 const TOKEN = process?.env?.MPTOKEN ?? ""
 
@@ -64,7 +65,7 @@ router.post("/crear-preferencia", async (req, res) => {
       id: result.id,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({
       error: error.message,
     });
@@ -78,8 +79,12 @@ router.post("/webhook", async (req, res) => {
       const result = await payment.get({
         id: paymentQ["data.id"],
       });
-      console.log(JSON.stringify(transformarObjeto(result.metadata)));
-      if (result.status === "approved") {
+      const existingAppointment = await AppointmentModel.findOne({
+        date: result.metadata.date,
+        hour: result.metadata.hour,
+        canceled: false,
+      });
+      if (result.status === "approved" && !existingAppointment) {
         await fetch("https://back-delta-seven.vercel.app/appointment/create", {
           method: 'POST',
           headers: {
@@ -91,7 +96,7 @@ router.post("/webhook", async (req, res) => {
       return res.status(200);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).json({ error: error.message });
   }
 });
