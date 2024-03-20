@@ -98,12 +98,10 @@ router.post("/create", async function (req, res, next) {
     });
 
     if (existingAppointment) {
-      console.log("existing", existingAppointment);
       return res.send(existingAppointment);
     }
 
     const newDoc = new AppointmentModel(req.body);
-    console.log("newDoc", newDoc);
     await newDoc.save();
 
     res.send(newDoc);

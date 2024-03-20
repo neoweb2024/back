@@ -11,6 +11,27 @@ const client = new MercadoPagoConfig({
 
 const payment = new Payment(client);
 
+function transformarObjeto(objeto) {
+  const nuevoObjeto = {};
+
+  for (let clave in objeto) {
+    if (objeto.hasOwnProperty(clave)) {
+      let nuevaClave = clave.replace(/_([a-z])/g, function (match, letra) {
+        return letra.toUpperCase();
+      });
+
+      if (typeof objeto[clave] === 'object' && objeto[clave] !== null && !Array.isArray(objeto[clave])) {
+        nuevoObjeto[nuevaClave] = transformarObjeto(objeto[clave]);
+      } else {
+        nuevoObjeto[nuevaClave] = objeto[clave];
+      }
+    }
+  }
+
+  return nuevoObjeto;
+}
+
+
 // POST
 router.post("/crear-preferencia", async (req, res) => {
   try {
@@ -58,14 +79,12 @@ router.post("/webhook", async (req, res) => {
         id: paymentQ["data.id"],
       });
       if (result.status === "approved") {
-        console.log("meta", result.metadata);
-        const appo = result.metadata
         await fetch("https://back-delta-seven.vercel.app/appointment/create", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(appo)
+          body: transformarObjeto(result.metadata)
         })
       }
       return res.status(200);
