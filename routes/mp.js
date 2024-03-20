@@ -73,6 +73,8 @@ router.post("/crear-preferencia", async (req, res) => {
       expiration_date_to: formatDate(new Date(new Date().getTime() + 5 * 60000))
     };
 
+    await QuededModel.deleteMany({ expiration: { $lte: new Date() } });
+    
     const isQueded = await QuededModel.findOne({
       date: req.body.appointment.date,
       hour: req.body.appointment.hour,
@@ -83,6 +85,7 @@ router.post("/crear-preferencia", async (req, res) => {
       const newDoc = new QuededModel({
         date: req.body.appointment.date,
         hour: req.body.appointment.hour,
+        expiration: new Date(new Date().getTime() + 5 * 60000)
       });
       await newDoc.save();
     }
@@ -116,12 +119,6 @@ router.post("/webhook", async (req, res) => {
       if (result.status === "approved" && !existingAppointment) {
         const newDoc = new AppointmentModel(transformarObjeto(result.metadata));
         await newDoc.save();
-      }
-      if (result.status !== "pending") {
-        await QuededModel.deleteOne({
-          date: result.metadata.date,
-          hour: result.metadata.hour
-        })
       }
       return res.status(200);
     }
