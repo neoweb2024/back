@@ -99,12 +99,12 @@ router.post("/create", async function (req, res, next) {
 
     if (existingAppointment) {
       return res.send(existingAppointment);
+    } else {
+      const newDoc = new AppointmentModel(req.body);
+      await newDoc.save();
+
+      res.send(newDoc);
     }
-
-    const newDoc = new AppointmentModel(req.body);
-    await newDoc.save();
-
-    res.send(newDoc);
   } catch (error) {
     console.error("Error:", error);
     res.status(500).send("Internal Server Error: POST of appointment");
