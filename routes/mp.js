@@ -59,7 +59,7 @@ router.post("/crear-preferencia", async (req, res) => {
       notification_url: `https://back-delta-seven.vercel.app/mercadopago/webhook`
     };
 
-    const isQueded = QuededModel.findOne({
+    const isQueded = await QuededModel.findOne({
       date: req.body.appointment.date,
       hour: req.body.appointment.hour,
     })
@@ -102,6 +102,8 @@ router.post("/webhook", async (req, res) => {
       if (result.status === "approved" && !existingAppointment) {
         const newDoc = new AppointmentModel(transformarObjeto(result.metadata));
         await newDoc.save();
+      }
+      if (result.status !== "pending") {
         await QuededModel.deleteOne({
           date: result.metadata.date,
           hour: result.metadata.hour
