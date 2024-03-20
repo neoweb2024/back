@@ -56,7 +56,8 @@ router.post("/crear-preferencia", async (req, res) => {
       },
       auto_return: "approved",
       metadata: req.body.appointment,
-      notification_url: `https://back-delta-seven.vercel.app/mercadopago/webhook`
+      notification_url: `https://back-delta-seven.vercel.app/mercadopago/webhook`,
+      expires: true
     };
 
     const isQueded = await QuededModel.findOne({
