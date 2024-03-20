@@ -85,13 +85,8 @@ router.post("/webhook", async (req, res) => {
         canceled: false,
       });
       if (result.status === "approved" && !existingAppointment) {
-        await fetch("https://back-delta-seven.vercel.app/appointment/create", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(transformarObjeto(result.metadata))
-        })
+        const newDoc = new AppointmentModel(transformarObjeto(result.metadata));
+        await newDoc.save();
       }
       return res.status(200);
     }
