@@ -58,6 +58,7 @@ router.post("/webhook", async (req, res) => {
         id: paymentQ["data.id"],
       });
       if (result.status === "approved") {
+        console.log("meta", result.metadata);
         const appo = result.metadata
         await fetch("https://back-delta-seven.vercel.app/appointment/create", {
           method: 'POST',

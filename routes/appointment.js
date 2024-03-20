@@ -85,12 +85,12 @@ router.post("/create", async function (req, res, next) {
   try {
     const lastMonth = dayjs().subtract(1, 'month').format('MM/YYYY');
 
-    await AppointmentModel.deleteMany({ 
-        date: { 
+    await AppointmentModel.deleteMany({
+      date: {
         $regex: `^\\d{2}/.*${lastMonth}`
       }
     });
-  
+
     const existingAppointment = await AppointmentModel.findOne({
       date: req.body.date,
       hour: req.body.hour,
@@ -98,10 +98,12 @@ router.post("/create", async function (req, res, next) {
     });
 
     if (existingAppointment) {
+      console.log("existing", existingAppointment);
       return res.send(existingAppointment);
     }
 
     const newDoc = new AppointmentModel(req.body);
+    console.log("newDoc", newDoc);
     await newDoc.save();
 
     res.send(newDoc);
