@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Preference, MercadoPagoConfig, Payment, } = require("mercadopago");
 import { AppointmentModel } from "../models/appointment/appointmentModel";
+import { QuededModel } from "../models/queded/quededModel";
 
 const TOKEN = process?.env?.MPTOKEN ?? ""
 
@@ -58,6 +59,20 @@ router.post("/crear-preferencia", async (req, res) => {
       notification_url: `https://back-delta-seven.vercel.app/mercadopago/webhook`
     };
 
+    const isQueded = QuededModel.findOne({
+      date: req.body.appointment.date,
+      hour: req.body.appointment.hour,
+    })
+
+    if (isQueded) return res.send({ error: "Turno en cola" })
+    else {
+      const newDoc = new QuededModel({
+        date: req.body.appointment.date,
+        hour: req.body.appointment.hour,
+      });
+      await newDoc.save();
+    }
+
     const preference = new Preference(client);
     const result = await preference.create({ body });
 
@@ -87,6 +102,10 @@ router.post("/webhook", async (req, res) => {
       if (result.status === "approved" && !existingAppointment) {
         const newDoc = new AppointmentModel(transformarObjeto(result.metadata));
         await newDoc.save();
+        await QuededModel.deleteOne({
+          date: result.metadata.date,
+          hour: result.metadata.hour
+        })
       }
       return res.status(200);
     }
