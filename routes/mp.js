@@ -50,8 +50,8 @@ function formatDate(date) {
 router.post("/crear-preferencia", async (req, res) => {
   try {
 
-    const successUrl = `https://front-sable-one.vercel.app/reserva-exitosa`;
-    const failureUrl = `https://front-sable-one.vercel.app/reserva-error`;
+    const successUrl = `https://www.neosalud.org/reserva-exitosa`;
+    const failureUrl = `https://www.neosalud.org/reserva-error`;
 
     const body = {
       items: [
